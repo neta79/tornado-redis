@@ -73,6 +73,10 @@ class BaseSubscriber(object):
         Unsubscribes the redis client from the channel
         if there are no subscribers left.
         """
+        if isinstance(channel_name, list) or isinstance(channel_name, tuple):
+            for c in channel_name:
+                self.unsubscribe(c, subscriber)
+            return
         self.subscribers[channel_name][subscriber] -= 1
         if self.subscribers[channel_name][subscriber] <= 0:
             del self.subscribers[channel_name][subscriber]
